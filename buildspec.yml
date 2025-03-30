@@ -19,11 +19,14 @@ phases:
 
   post_build:
     commands:
+      - TIMESTAMP=$(date +%Y%m%d%H%M%S)
+      - echo "Generated Timestamp: $TIMESTAMP"
+
       - echo "Uploading to S3..."
-      - aws s3 cp deployment_package.zip s3://lambda-builds-zip8081/deployment_package_$(date +%Y%m%d%H%M%S).zip
+      - aws s3 cp deployment_package.zip s3://lambda-builds-zip8081/deployment_package_$TIMESTAMP.zip
 
       - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name DoorDash --s3-bucket lambda-builds-zip8081 --s3-key deployment_package_$(date +%Y%m%d%H%M%S).zip
+      - aws lambda update-function-code --function-name DoorDash --s3-bucket lambda-builds-zip8081 --s3-key deployment_package_$TIMESTAMP.zip
 
       - echo "Publishing new version..."
       - VERSION=$(aws lambda publish-version --function-name DoorDash --query Version --output text)
