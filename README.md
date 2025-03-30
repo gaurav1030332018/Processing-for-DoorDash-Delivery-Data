@@ -30,8 +30,8 @@ Daily JSON files will be uploaded to `doordash-landing-zn` with the format `yyyy
 
 ### 2️⃣ Set Up S3 Buckets
 - Create **two S3 buckets**:
-  - `doordash-landing-zn` (for incoming raw files)
-  - `doordash-target-zn` (for processed files)
+  - `door-dashlanding-gb1 ` (for incoming raw files)
+  - `doordash-target-gb1` (for processed files)
 
 ### 3️⃣ Set Up Amazon SNS Topic
 - Create an **SNS topic** for sending processing notifications.
@@ -39,8 +39,8 @@ Daily JSON files will be uploaded to `doordash-landing-zn` with the format `yyyy
 
 ### 4️⃣ Create IAM Role for Lambda
 - Create an **IAM role** with the following permissions:
-  - Read from `doordash-landing-zn`
-  - Write to `doordash-target-zn`
+  - Read from `door-dashlanding-gb1`
+  - Write to `doordash-target-gb1`
   - Publish messages to the **SNS topic**
 
 ### 5️⃣ Create and Configure AWS Lambda Function
