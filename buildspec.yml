@@ -29,13 +29,14 @@ phases:
       - sleep 10
 
       - echo "Publishing new version..."
-      - VERSION=$(aws lambda publish-version --function-name DoorDash --query Version --output text || echo "FAILED")
+      - |
+        VERSION=$(aws lambda publish-version --function-name DoorDash --query Version --output text || echo "FAILED")
 
-      - if [ "$VERSION" = "FAILED" ]; then
-          echo "Lambda version publish failed! Skipping alias update.";
+        if [ "$VERSION" = "FAILED" ]; then
+          echo "Lambda version publish failed! Skipping alias update."
         else
-          echo "Updating alias to point to new version: $VERSION";
-          aws lambda update-alias --function-name DoorDash --name PROD --function-version $VERSION;
+          echo "Updating alias to point to new version: $VERSION"
+          aws lambda update-alias --function-name DoorDash --name PROD --function-version $VERSION
         fi
 
       - echo "Deployment complete!"
