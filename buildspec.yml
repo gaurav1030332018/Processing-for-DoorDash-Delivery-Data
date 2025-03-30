@@ -15,11 +15,20 @@ phases:
       - zip -r9 ../deployment_package.zip .
       - cd ..
       - zip -g deployment_package.zip lambda_function.py
+      - echo "Zipping complete!"
 
   post_build:
     commands:
       - echo "Uploading to S3..."
-      - aws s3 cp deployment_package.zip s3://lambda-builds-zip8081/
+      - aws s3 cp deployment_package.zip s3://lambda-builds-zip8081/deployment_package_$(date +%Y%m%d%H%M%S).zip
+
       - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name DoorDash --s3-bucket lambda-builds-zip8081 --s3-key deployment_package.zip
+      - aws lambda update-function-code --function-name DoorDash --s3-bucket lambda-builds-zip8081 --s3-key deployment_package_$(date +%Y%m%d%H%M%S).zip
+
+      - echo "Publishing new version..."
+      - VERSION=$(aws lambda publish-version --function-name DoorDash --query Version --output text)
+
+      - echo "Updating alias to point to new version..."
+      - aws lambda update-alias --function-name DoorDash --name PROD --function-version $VERSION
+
       - echo "Deployment complete!"
